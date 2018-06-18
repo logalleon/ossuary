@@ -1,0 +1,23 @@
+{
+  "name": "ossuary",
+  "version": "1.0.0",
+  "description": "An language parser.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logalleon/ossuary.git"
+  },
+  "keywords": [
+    "random",
+    "language"
+  ],
+  "author": "logalleon",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/logalleon/ossuary/issues"
+  },
+  "homepage": "https://github.com/logalleon/ossuary#readme"
+}
