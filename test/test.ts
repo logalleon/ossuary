@@ -1,5 +1,5 @@
-import { Legendary } from './Legendary';
-
+import { Ossuary } from '../src/Ossuary';
+import { LegendaryData as data } from './test.data';
 /**
  * [list] - selects from list, same as ...
  * [list:unique(1)] - selects 1, unique, from list
@@ -14,14 +14,16 @@ import { Legendary } from './Legendary';
  * {A} - uses A/An on the next word
  * @param source 
  */
-const L = new Legendary();
+const ossuary = new Ossuary(data);
 
 const source1 = '[animals] is my favorite animal.';
 const source2 = '[mammals|reptiles] is cool, too.';
 const source3 = '[animals.mammals|mammals^10] is a mammal.';
 const source4 = '{something cool|anything^10|nothing^.1} will happen.';
+const source5 = '[mammals:unique(2)^2|primates:unique(1)]';
 
-console.log(L.parse(source1));
-console.log(L.parse(source2));
-console.log(L.parse(source3));
-console.log(L.parse(source4));
+console.log(ossuary.parse(source1));
+console.log(ossuary.parse(source2));
+console.log(ossuary.parse(source3));
+console.log(ossuary.parse(source4));
+console.log(ossuary.parse(source5));

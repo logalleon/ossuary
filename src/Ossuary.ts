@@ -1,9 +1,15 @@
-import { LegendaryData, ArbitraryData } from './language.data';
 import { randomInt, pluck, weightedPluck } from './Random';
 
-class Legendary {
+// Data container for any arbitrary kind of data
+interface ArbitraryData {
+  val: string,
+  [key: string]: any
+}
+
+class Ossuary {
 
   private lists;
+  private uniqueSelectionDelimiter: string = ' ';
 
   constructor ({...lists}) {
     // Load language libraries
@@ -62,30 +68,102 @@ class Legendary {
     return source;
   }
 
+  /**
+   * 
+   * @param lists 
+   * @param source 
+   */
   parseLists (lists: string [], source: string): string {
+    // Process each list
     lists.forEach((listGroup) => {
+      let uniqueOptionReferenceIndex = {};
+      let uniqueOptions = false;
+      // Divide on each pipe
       const listReferences = listGroup.split('|');
       let results = [];
       let weighted = false;
-      listReferences.forEach((listReference) => {
-        let [accessor] = listReference.match(/([a-zA-Z\s\^\.[0-9])+/);
+      listReferences.forEach((listReference, referenceIndex) => {
+        let [accessor] = listReference.match(/[a-zA-Z\s]+/);
         let scalar;
         // Parse out the scalar for frequency
-        if (accessor.indexOf('^')) {
-          [accessor, scalar] = accessor.split('^');
+        if (listReference.indexOf('^') !== -1) {
+          scalar = listReference.split('^')[1].match(/[0-9]+/).join('');
         }
-        accessor = accessor.replace('[', '').replace(']', '');
-        const result = this.deepDive(accessor);
-        if (scalar) {
-          weighted = true;
-          results.push(`${result}^${scalar}`);
+        // Parse out unique
+        let quantity;
+        if (listReference.indexOf(':') !== -1) {
+          quantity = listGroup.split(':')[1].match(/[0-9]+/).join('');
+          uniqueOptions = true;
+        }
+        
+        // Unique selections have to select from a list
+        let result: string | string[];
+        if (uniqueOptions && quantity) {
+          result = this.deepDive(accessor, true);
+          uniqueOptionReferenceIndex[referenceIndex] = {
+            result,
+            quantity
+          };
+          // i.e. results [1^10, 'frog', 5]
+          if (scalar) {
+             weighted = true;
+             results.push(`${referenceIndex}^${scalar}`);
+          // i.e. results [1, 'frog', 5]
+          } else {
+             results.push(`${referenceIndex}`);
+          }
+        // Regular - thank god  
         } else {
-          results.push(result);
+          result = this.deepDive(accessor);
+          if (scalar) {
+            weighted = true;
+            results.push(`${result}^${scalar}`);
+          } else {
+            results.push(result);
+          }
         }
       });
-      source = source.replace(listGroup, weighted ? weightedPluck(results) : pluck(results));
+      // Unique lists mess with everything
+      if (uniqueOptions) {
+        let intermediarySelection;
+        if (weighted) {
+          intermediarySelection = weightedPluck(results);
+        } else {
+          intermediarySelection = pluck(results);
+        }
+        // The selected item was part of a unique list selection
+        if (uniqueOptionReferenceIndex[intermediarySelection]) {
+          const { uniqueSelectionDelimiter } = this;
+          // @TODO this might become an issue for selecting from a list of numeric values
+          const uniqueSelection = uniqueOptionReferenceIndex[intermediarySelection];
+          const { result, quantity } = uniqueSelection;
+          if (quantity > result.length) {
+            source = source.replace(listGroup, result.join(uniqueSelectionDelimiter));
+          } else {
+            source = source.replace(listGroup, this.reducePluck(result, quantity).join(uniqueSelectionDelimiter));
+          }
+        } else {
+          source = source.replace(listGroup, intermediarySelection);
+        }
+      // Replace the list group for each section
+      } else {
+        source = source.replace(listGroup, weighted ? weightedPluck(results) : pluck(results));
+      }
     });
+    // Return the wholly modified source
     return source;
+  }
+
+  reducePluck (arr: string[], quantity: number): string[] {
+    let values: string[] = [];
+    let mut = [].concat(arr);
+    for (let i = 0; i < quantity; i++) {
+      const value = pluck(mut);
+      values.push(value);
+      const index = mut.indexOf(value);
+      mut.splice(index, 1);
+    }
+    return values;
   }
 
   parseAdHocLists (adHocLists: string[], source: string): string {
@@ -109,7 +187,7 @@ class Legendary {
    * Recursively unfurl an object
    * @param accessor {string}
    */
-  deepDive (accessor: string): string {
+  deepDive (accessor: string, array?: boolean): string | string[] {
     let selections = [];
     let a: string|string[];
     let ref: any = this.lists;
@@ -133,8 +211,13 @@ class Legendary {
       }
     }
     diveIn(ref);
-    return pluck(selections);
+    if (array) {
+      return selections;
+    } else {
+      return pluck(selections);
+    }
   }
+
 
   /**
    * Recursively unfurl and object
@@ -173,4 +256,4 @@ class Legendary {
   }
 
 }
-export { Legendary };
+export { Ossuary };

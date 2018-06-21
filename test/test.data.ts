@@ -7,7 +7,10 @@ const LegendaryData = {
   animals: {
     mammals: [
       'dog',
-      'cat'
+      'cat',
+      'squirrel',
+      'badger',
+      'bear'
     ],
     reptiles: [
       'lizard'
@@ -15,7 +18,15 @@ const LegendaryData = {
   },
   mammals: [
     'dog',
-    'cat'
+    'cat',
+    'squirrel',
+    'badger',
+    'bear'
+  ],
+  primates: [
+    'lemur',
+    'gorilla',
+    'orangutan'
   ],
   reptiles: [
     'lizard'

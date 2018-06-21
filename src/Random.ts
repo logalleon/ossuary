@@ -15,6 +15,9 @@ const weightedPluck = (arr: string[]): string => {
       const [str, scalar] = el.split('^');
       scalars[i] = Number(scalar);
       items[i] = str;
+    // Default scale if at least one item is scaled is 1
+    } else {
+      scalars[i] = 1;
     }
     const scalar = scalars[i];
     min = scalar < min ? scalar : min;
