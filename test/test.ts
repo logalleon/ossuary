@@ -1,4 +1,4 @@
-import { Ossuary } from '../src/Ossuary';
+import { Ossuary } from '../lib/Ossuary';
 import { LegendaryData as data } from './test.data';
 /**
  * [list] - selects from list, same as ...
@@ -16,16 +16,27 @@ import { LegendaryData as data } from './test.data';
  */
 const ossuary = new Ossuary(data);
 
-const source1 = '[animals] is my favorite animal.';
-const source2 = '[mammals|reptiles] is cool, too.';
-const source3 = '{A} [animals.mammals|mammals^10] is a mammal.';
-const source4 = '{something cool|anything^10|nothing^.1} will happen.';
-const source5 = '[mammals:unique(2)^2|primates:unique(1000)]';
-const source6 = '{A} {dog|elephant} or {a} {grey donkey|apple}.';
+const o = (str: string): void => {
+  console.log(ossuary.parse(str));
+};
 
-console.log(ossuary.parse(source1));
-console.log(ossuary.parse(source2));
-console.log(ossuary.parse(source3));
-console.log(ossuary.parse(source4));
-console.log(ossuary.parse(source5));
-console.log(ossuary.parse(source6));
+// Good
+const good = [
+  '[animals] is my favorite animal.',
+  '[mammals|reptiles] is cool, too.',
+  '{A} [animals.mammals|mammals^10] is a mammal.',
+  '{something cool|anything^10|nothing^.1} will happen.',
+  '[mammals:unique(2)^2|primates:unique(1000)]',
+  '{A} {dog|elephant} or {a} {grey donkey|apple}.'
+];
+console.log('\tGood\t\t~~~~~~~~~~~~~~~\n');
+good.map(o);
+
+// Bad
+const bad = [
+  'afspoijeaposi',
+  '[null] is a thing',
+  '{{{{{{{{why}}}}}}}',
+]
+console.log('\tBad\t\t~~~~~~~~~~~~~~~\n');
+bad.map(o);

@@ -6,12 +6,17 @@ interface ArbitraryData {
   [key: string]: any
 }
 
+enum Tokens {
+  A_LOWER = '{a}',
+  A_UPPER = '{A}',
+  SPACE = ' '
+}
+
+const vowels: string[] = ['a', 'e', 'i', 'o', 'u', 'y'];
+
 class Ossuary {
 
   private lists;
-  private uniqueSelectionDelimiter: string = ' ';
-  private aLowerDelimiter = '{a}';
-  private aUpperDelimiter = '{A}';
 
   constructor ({...lists}) {
     // Load language libraries
@@ -59,36 +64,53 @@ class Ossuary {
    * @param source 
    */
   parse (source: string): string {
-    const lists = source.match(/\[.+?\]/g);
-    let adHocLists = source.match(/\{.+?\}/g);
-    if (lists) {
-      source = this.parseLists(lists, source);
-    }
-    if (adHocLists) {
-      adHocLists = this.stripATags(adHocLists);
-      source = this.parseAdHocLists(adHocLists, source);
-      if (source.indexOf(this.aLowerDelimiter) !== -1) {
-        source = this.replaceATags(source, this.aLowerDelimiter);
+    const bracketLists = source.match(/\[.+?\]/g);
+    const curlyLists = source.match(/\{.+?\}/g);
+
+    source = Array.isArray(bracketLists) ? this.parseLists(bracketLists.filter(this.filterEmpty), source) : source;
+
+    if (curlyLists) {
+      const adHocLists = this.filterATags(curlyLists.filter(this.filterEmpty));
+      source = Array.isArray(adHocLists) ? this.parseAdHocLists(adHocLists, source) : source;
+      if (source.indexOf(Tokens.A_LOWER) !== -1) {
+        source = this.replaceATags(source, Tokens.A_LOWER);
       }
-      if (source.indexOf(this.aUpperDelimiter) !== -1) {
-        source = this.replaceATags(source, this.aUpperDelimiter);
+      if (source.indexOf(Tokens.A_UPPER) !== -1) {
+        source = this.replaceATags(source, Tokens.A_UPPER);
       }
     }
     return source;
   }
 
-  stripATags (arr: string[]): string[] {
-    let ret: string[] = [];
+  /**
+   * Removes a/an tags from a curly brace list
+   * @param arr {string[]}
+   */
+  filterATags (arr: string[]): string[] {
+    let filtered: string[] = [];
     arr.forEach((str: string, index: number) => {
-      if (str !== this.aLowerDelimiter && str !== this.aUpperDelimiter) {
-        ret.push(arr[index]);
+      if (str !== Tokens.A_LOWER && str !== Tokens.A_UPPER) {
+        filtered.push(arr[index]);
       }
     });
-    return ret; 
+    return filtered; 
   }
 
+  /**
+   * Removes empty items
+   * @TODO this probably has to be smarter
+   * @param arr 
+   */
+  filterEmpty (str: string): boolean {
+    return str.trim().length !== 0;
+  }
+
+  /**
+   * Replaces a/an tags with their appropriate token
+   * @param source 
+   * @param tag 
+   */
   replaceATags (source: string, tag: string): string {
-    const vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
     const raw = tag.match(/[a-zA-Z]/g).join('');
     while (source.indexOf(tag) !== -1) {
       const index = source.indexOf(tag);
@@ -168,14 +190,13 @@ class Ossuary {
         }
         // The selected item was part of a unique list selection
         if (uniqueOptionReferenceIndex[intermediarySelection]) {
-          const { uniqueSelectionDelimiter } = this;
           // @TODO this might become an issue for selecting from a list of numeric values
           const uniqueSelection = uniqueOptionReferenceIndex[intermediarySelection];
           const { result, quantity } = uniqueSelection;
           if (quantity > result.length) {
-            source = source.replace(listGroup, result.join(uniqueSelectionDelimiter));
+            source = source.replace(listGroup, result.join(Tokens.SPACE));
           } else {
-            source = source.replace(listGroup, this.reducePluck(result, quantity).join(uniqueSelectionDelimiter));
+            source = source.replace(listGroup, this.reducePluck(result, quantity).join(Tokens.SPACE));
           }
         } else {
           source = source.replace(listGroup, intermediarySelection);
@@ -233,6 +254,9 @@ class Ossuary {
       });
     } else {
       ref = ref[accessor];
+    }
+    if (typeof ref === 'undefined') {
+      return [];
     }
     const diveIn = (swimmingPool: any) => {
       if (Array.isArray(swimmingPool)) {
