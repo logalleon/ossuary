@@ -18,12 +18,14 @@ const ossuary = new Ossuary(data);
 
 const source1 = '[animals] is my favorite animal.';
 const source2 = '[mammals|reptiles] is cool, too.';
-const source3 = '[animals.mammals|mammals^10] is a mammal.';
+const source3 = '{A} [animals.mammals|mammals^10] is a mammal.';
 const source4 = '{something cool|anything^10|nothing^.1} will happen.';
-const source5 = '[mammals:unique(2)^2|primates:unique(1)]';
+const source5 = '[mammals:unique(2)^2|primates:unique(1000)]';
+const source6 = '{A} {dog|elephant} or {a} {grey donkey|apple}.';
 
 console.log(ossuary.parse(source1));
 console.log(ossuary.parse(source2));
 console.log(ossuary.parse(source3));
 console.log(ossuary.parse(source4));
 console.log(ossuary.parse(source5));
+console.log(ossuary.parse(source6));

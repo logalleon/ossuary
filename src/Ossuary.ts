@@ -10,6 +10,8 @@ class Ossuary {
 
   private lists;
   private uniqueSelectionDelimiter: string = ' ';
+  private aLowerDelimiter = '{a}';
+  private aUpperDelimiter = '{A}';
 
   constructor ({...lists}) {
     // Load language libraries
@@ -57,13 +59,46 @@ class Ossuary {
    * @param source 
    */
   parse (source: string): string {
-    const lists = source.match(/\[.+\]/g);
-    const adHocLists = source.match(/\{.+\}/g);
+    const lists = source.match(/\[.+?\]/g);
+    let adHocLists = source.match(/\{.+?\}/g);
     if (lists) {
       source = this.parseLists(lists, source);
     }
     if (adHocLists) {
+      adHocLists = this.stripATags(adHocLists);
       source = this.parseAdHocLists(adHocLists, source);
+      if (source.indexOf(this.aLowerDelimiter) !== -1) {
+        source = this.replaceATags(source, this.aLowerDelimiter);
+      }
+      if (source.indexOf(this.aUpperDelimiter) !== -1) {
+        source = this.replaceATags(source, this.aUpperDelimiter);
+      }
+    }
+    return source;
+  }
+
+  stripATags (arr: string[]): string[] {
+    let ret: string[] = [];
+    arr.forEach((str: string, index: number) => {
+      if (str !== this.aLowerDelimiter && str !== this.aUpperDelimiter) {
+        ret.push(arr[index]);
+      }
+    });
+    return ret; 
+  }
+
+  replaceATags (source: string, tag: string): string {
+    const vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
+    const raw = tag.match(/[a-zA-Z]/g).join('');
+    while (source.indexOf(tag) !== -1) {
+      const index = source.indexOf(tag);
+      // 4 is the length of the tag plus the next space
+      const nextLetter = source[index + 4];
+      if (vowels.includes(nextLetter)) {
+        source = source.slice(0, index) + raw + 'n' + ' ' + source.slice(index + 4);
+      } else {
+        source = source.slice(0, index) + raw + ' ' + source.slice(index + 4);
+      }
     }
     return source;
   }
@@ -92,7 +127,7 @@ class Ossuary {
         // Parse out unique
         let quantity;
         if (listReference.indexOf(':') !== -1) {
-          quantity = listGroup.split(':')[1].match(/[0-9]+/).join('');
+          quantity = listReference.split(':')[1].match(/[0-9]+/).join('');
           uniqueOptions = true;
         }
         
