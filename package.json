@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/logalleon/ossuary#readme",
   "dependencies": {
-    "ts-node": "^6.1.2"
+    "ts-node": "^6.1.2",
+    "typescript": "^2.9.2"
   }
 }

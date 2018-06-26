@@ -27,7 +27,8 @@ const good = [
   '{A} [animals.mammals|mammals^10] is a mammal.',
   '{something cool|anything^10|nothing^.1} will happen.',
   '[mammals:unique(2)^2|primates:unique(1000)]',
-  '{A} {dog|elephant} or {a} {grey donkey|apple}.'
+  '{A} {dog|elephant} or {a} {grey donkey|apple}.',
+  '{This is a |test 4 2 5| of}'
 ];
 console.log('\tGood\t\t~~~~~~~~~~~~~~~\n');
 good.map(o);

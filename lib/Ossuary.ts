@@ -18,9 +18,9 @@ class Ossuary {
 
   private lists;
 
-  constructor ({...lists}) {
+  constructor (dictionary: object) {
     // Load language libraries
-    this.lists = Object.assign({}, lists);
+    this.lists = dictionary;
   }
 
   /**
