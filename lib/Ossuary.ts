@@ -140,7 +140,7 @@ class Ossuary {
       let results = [];
       let weighted = false;
       listReferences.forEach((listReference, referenceIndex) => {
-        let [accessor] = listReference.match(/[a-zA-Z\s]+/);
+        let [accessor] = listReference.match(/[a-zA-ZÀ-ÿ-\s]+/);
         let scalar;
         // Parse out the scalar for frequency
         if (listReference.indexOf('^') !== -1) {
@@ -228,7 +228,7 @@ class Ossuary {
       let results = [];
       let weighted = false;
       choices.forEach((choice) => {
-        const [result] = choice.match(/([a-zA-Z\s\^\.0-9])+/);
+        const [result] = choice.match(/([a-zA-ZÀ-ÿ-\s\^\.0-9])+/);
         results.push(result);
         if (result.indexOf('^') !== -1) {
           weighted = true;
