@@ -1,4 +1,4 @@
-.PHONY build;
+.PHONY: build;
 
 build : index.js ;
 

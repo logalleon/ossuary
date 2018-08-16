@@ -140,7 +140,7 @@ class Ossuary {
       let results = [];
       let weighted = false;
       listReferences.forEach((listReference, referenceIndex) => {
-        let [accessor] = listReference.match(/[a-zA-ZÀ-ÿ-\s]+/);
+        let [accessor] = listReference.match(/[a-zA-ZÀ-ÿ-\s\.]+/);
         let scalar;
         // Parse out the scalar for frequency
         if (listReference.indexOf('^') !== -1) {
@@ -298,7 +298,7 @@ class Ossuary {
       if (Array.isArray(swimmingPool)) {
         selections = selections.concat(swimmingPool);
       } else if (typeof swimmingPool === 'object') {
-          // This is for fetching datastructures from legendary
+          // This is for fetching datastructures @TODO
           if (swimmingPool.val) {
             selections.push(swimmingPool);
           } else {

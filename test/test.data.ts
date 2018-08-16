@@ -13,7 +13,17 @@ const LegendaryData = {
       'bear'
     ],
     reptiles: [
-      'lizard'
+      'lizard',
+      'iguana',
+      'cobra',
+      'coral snake'
+    ],
+    insects: [
+      'ant',
+      'spider',
+      'grasshopper',
+      'cricket',
+      'caterpillar'
     ]
   },
   mammals: [

@@ -22,25 +22,7 @@ const o = (str: string): void => {
 
 // Good
 const good = [
-  '[animals] is my favorite animal.',
-  '[mammals|reptiles] is cool, too.',
-  '{A} [animals.mammals|mammals^10] is a mammal.',
-  '{something cool|anything^10|nothing^.1} will happen.',
-  '[mammals:unique(2)^2|primates:unique(1000)]',
-  '{A} {dog|elephant} or {a} {grey donkey|apple}.',
-  '{This is a |test 4 2 5| of}',
-  '{höòw áb-out açentß?|trûë--}',
-  '[reptiles] are really cool.',
-  '[mammals.insects:unique(2)] is an animal'
+  '[animals.insects:unique(2)] is an animal'
 ];
 console.log('\tGood\t\t~~~~~~~~~~~~~~~\n');
 good.map(o);
-
-// Bad
-const bad = [
-  'afspoijeaposi',
-  '[null] is a thing',
-  '{{{{{{{{why}}}}}}}',
-]
-console.log('\tBad\t\t~~~~~~~~~~~~~~~\n');
-bad.map(o);
