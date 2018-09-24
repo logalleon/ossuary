@@ -8,7 +8,7 @@ var Tokens;
     Tokens["SPACE"] = " ";
 })(Tokens || (Tokens = {}));
 const vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
-class Ossuary {
+class Parser {
     constructor(dictionary) {
         this.recursiveslyParse = (str) => {
             let parsed = this.parse(str);
@@ -271,5 +271,4 @@ class Ossuary {
         }
     }
 }
-exports.Ossuary = Ossuary;
-//# sourceMappingURL=Ossuary.js.map
+exports.Parser = Parser;

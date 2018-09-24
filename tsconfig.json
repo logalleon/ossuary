@@ -3,13 +3,12 @@
       "target": "es6",
       "module": "commonjs",
       "moduleResolution": "node",
-      "sourceMap": true,
       "outDir": "dist",
-      "lib": [ "es2015", "es6", "es7", "dom.iterable" ],
-      "skipLibCheck": true,
+      "lib": [ "es6" ],
       "declaration": true
   },
   "include": [
-    "lib/*.ts"
+    "lib/*.*",
+    "index.ts"
   ]
 }

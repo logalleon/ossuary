@@ -22,4 +22,3 @@ const rollDice = (dice) => {
     return roll + (bonus ? Number(bonus) : 0);
 };
 exports.rollDice = rollDice;
-//# sourceMappingURL=Dice.js.map

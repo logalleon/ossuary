@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Parser_1 = require("./lib/Parser");
+exports.Parser = Parser_1.Parser;
+const Random = require("./lib/Random");
+exports.Random = Random;
+const RRange = require("./lib/RRange");
+exports.RRange = RRange;
+const Dice = require("./lib/Dice");
+exports.Dice = Dice;

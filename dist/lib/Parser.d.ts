@@ -2,7 +2,7 @@ interface ArbitraryData {
     val: string;
     [key: string]: any;
 }
-declare class Ossuary {
+declare class Parser {
     lists: any;
     constructor(dictionary: object);
     /**
@@ -39,4 +39,4 @@ declare class Ossuary {
     deepDiveRetrieve(accessor: string, returnEntireArray?: boolean): ArbitraryData;
     recursiveslyParse: (str: string) => string;
 }
-export { Ossuary };
+export { Parser, ArbitraryData };
