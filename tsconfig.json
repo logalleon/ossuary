@@ -5,6 +5,11 @@
       "moduleResolution": "node",
       "sourceMap": true,
       "outDir": "dist",
-      "lib": [ "es2015", "es6", "es7", "dom.iterable" ]
-  }
+      "lib": [ "es2015", "es6", "es7", "dom.iterable" ],
+      "skipLibCheck": true,
+      "declaration": true
+  },
+  "include": [
+    "lib/*.ts"
+  ]
 }

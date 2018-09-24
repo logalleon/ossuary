@@ -2,9 +2,9 @@
   "name": "ossuary",
   "version": "1.0.0",
   "description": "An language parser.",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "types": {
-    "main": "./lib/main.d.ts"
+    "main": "./dist/main.d.ts"
   },
   "scripts": {
     "test": "ts-node test/test.ts"
