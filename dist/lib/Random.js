@@ -1,10 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const pluck = (arr) => {
+class IntegerRange {
+    constructor(low, high) {
+        this.low = low;
+        this.high = high;
+    }
+    diff() {
+        return this.high - this.low;
+    }
+}
+exports.IntegerRange = IntegerRange;
+function pluck(arr) {
     return arr[randomInt(0, arr.length - 1)];
-};
+}
 exports.pluck = pluck;
-const weightedPluck = (arr) => {
+function weightedPluck(arr) {
     const scalars = {};
     const items = [].concat(arr);
     let scaleMax = 0;
@@ -39,15 +49,17 @@ const weightedPluck = (arr) => {
         }
     }
     return weightedSelection;
-};
+}
 exports.weightedPluck = weightedPluck;
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 exports.randomInt = randomInt;
-const randomIntR = (range) => {
+function randomIntRange(range) {
     return randomInt(range.low, range.high);
-};
-exports.randomIntR = randomIntR;
-const clamp = (value, low, high) => {
+}
+exports.randomIntRange = randomIntRange;
+function clamp(value, low, high) {
     if (value < low) {
         return low;
     }
@@ -55,5 +67,5 @@ const clamp = (value, low, high) => {
         return high;
     }
     return value;
-};
+}
 exports.clamp = clamp;

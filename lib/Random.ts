@@ -1,10 +1,24 @@
-import { RRange } from "./RRange";
+class IntegerRange {
 
-const pluck = (arr: Array<any>): any => {
+  public low: number;
+  public high: number;
+
+  constructor (low: number, high: number) {
+    this.low = low;
+    this.high = high;
+  }
+
+  diff (): number {
+    return this.high - this.low;
+  }
+  
+}
+
+function pluck (arr: Array<any>): any {
   return arr[randomInt(0, arr.length - 1)];
 }
 
-const weightedPluck = (arr: string[]): string => {
+function weightedPluck (arr: string[]): string {
   const scalars = {};
   const items = [].concat(arr);
   let scaleMax = 0;
@@ -40,15 +54,17 @@ const weightedPluck = (arr: string[]): string => {
   return weightedSelection;
 }
 
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+function randomInt (min: number, max: number): number {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-const randomIntR = (range: RRange): number => {
+function randomIntRange (range: IntegerRange): number {
   return randomInt(range.low, range.high);
 }
 
 
 
-const clamp = (value: number, low: number, high: number): number => {
+function clamp (value: number, low: number, high: number): number {
   if (value < low) {
     return low;
   }
@@ -58,4 +74,4 @@ const clamp = (value: number, low: number, high: number): number => {
   return value;
 }
 
-export { randomInt, pluck, clamp, weightedPluck, randomIntR };
+export { randomInt, pluck, clamp, weightedPluck, randomIntRange, IntegerRange };

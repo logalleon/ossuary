@@ -37,11 +37,11 @@ class Parser {
                 accessor = accessor.replace('[', '').replace(']', '');
                 const result = this.deepDiveRetrieve(accessor);
                 results.push(result);
-                if (result.val && result.val.indexOf('^') !== -1) {
-                }
-                else if (result.indexOf('^') !== -1) {
-                    weighted = true;
-                }
+                // @TODO
+                // if (result.val && result.val.indexOf('^') !== -1) {
+                // } else if (result.indexOf('^') !== -1) {
+                //   weighted = true;
+                // }
             });
             selection = weighted ? Random_1.weightedPluck(results) : Random_1.pluck(results);
         });
@@ -271,4 +271,4 @@ class Parser {
         }
     }
 }
-exports.Parser = Parser;
+exports.default = Parser;

@@ -36,7 +36,8 @@ declare class Parser {
      * Recursively unfurl and object
      * @param accessor {string}
      */
-    deepDiveRetrieve(accessor: string, returnEntireArray?: boolean): ArbitraryData;
+    deepDiveRetrieve(accessor: string, returnEntireArray?: boolean): ArbitraryData | ArbitraryData[];
     recursiveslyParse: (str: string) => string;
 }
-export { Parser, ArbitraryData };
+export default Parser;
+export { ArbitraryData };

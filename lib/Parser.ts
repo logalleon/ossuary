@@ -38,11 +38,12 @@ class Parser {
         accessor = accessor.replace('[', '').replace(']', '');
         const result = this.deepDiveRetrieve(accessor);
         results.push(result);
-        if (result.val && result.val.indexOf('^') !== -1) {
+        // @TODO
+        // if (result.val && result.val.indexOf('^') !== -1) {
 
-        } else if (result.indexOf('^') !== -1) {
-          weighted = true;
-        }
+        // } else if (result.indexOf('^') !== -1) {
+        //   weighted = true;
+        // }
       });
       selection = weighted ? weightedPluck(results) : pluck(results);
     });
@@ -234,7 +235,7 @@ class Parser {
    * Recursively unfurl and object
    * @param accessor {string}
    */
-  deepDiveRetrieve (accessor: string, returnEntireArray?: boolean): ArbitraryData {
+  deepDiveRetrieve (accessor: string, returnEntireArray?: boolean): ArbitraryData|ArbitraryData[] {
     let selections = [];
     let a: string|string[];
     let ref: any = this.lists;
@@ -282,4 +283,5 @@ class Parser {
 
 }
 
-export { Parser, ArbitraryData };
+export default Parser;
+export { ArbitraryData };
