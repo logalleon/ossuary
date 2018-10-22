@@ -12,13 +12,34 @@ var StandardDice;
     StandardDice["d20"] = "d20";
 })(StandardDice || (StandardDice = {}));
 exports.StandardDice = StandardDice;
-const rollDice = (dice) => {
+var RollErrors;
+(function (RollErrors) {
+    RollErrors["MaxDiceError"] = "Iterations greater than maximum dice allowed.";
+    RollErrors["MaxValueError"] = "Size of dice greater than maximum die value.";
+})(RollErrors || (RollErrors = {}));
+exports.RollErrors = RollErrors;
+const rollDice = (dice, options) => {
     let roll = 0;
+    let arr = [];
     const [die, bonus] = dice.split('+');
     const [iterations, range] = die.split('d');
-    for (let i = 0; i < (iterations ? Number(iterations) : 1); i++) {
-        roll += Random_1.randomInt(1, Number(range));
+    if (options && options.maxDice && Number(iterations) > options.maxDice) {
+        throw new Error(RollErrors.MaxDiceError);
     }
-    return roll + (bonus ? Number(bonus) : 0);
+    for (let i = 0; i < (iterations ? Number(iterations) : 1); i++) {
+        const val = Random_1.randomInt(1, Number(range));
+        if (options && options.asArray) {
+            arr.push(val);
+        }
+        roll += val;
+    }
+    if (arr.length) {
+        // Bonus always gets tacked to the end
+        arr.push(bonus);
+        return arr;
+    }
+    else {
+        return roll + (bonus ? Number(bonus) : 0);
+    }
 };
 exports.rollDice = rollDice;

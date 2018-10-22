@@ -7,5 +7,14 @@ declare enum StandardDice {
     d12 = "d12",
     d20 = "d20"
 }
-declare const rollDice: (dice: string) => number;
-export { rollDice, StandardDice };
+declare enum RollErrors {
+    MaxDiceError = "Iterations greater than maximum dice allowed.",
+    MaxValueError = "Size of dice greater than maximum die value."
+}
+interface RollOptions {
+    asArray?: boolean;
+    maxDice?: number;
+    maxValue?: number;
+}
+declare const rollDice: (dice: string, options?: RollOptions) => number | number[];
+export { rollDice, StandardDice, RollOptions, RollErrors };
