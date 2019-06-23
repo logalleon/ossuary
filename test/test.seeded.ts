@@ -14,7 +14,7 @@ import { LegendaryData as data } from './test.data';
  * {A} - uses A/An on the next word
  * @param source 
  */
-const ossuary = new Parser(data);
+const ossuary = new Parser(data, true, 2);
 
 const o = (str: string): void => {
   console.log(ossuary.parse(str));

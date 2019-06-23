@@ -14,11 +14,11 @@ class IntegerRange {
   
 }
 
-function pluck (arr: Array<any>): any {
-  return arr[randomInt(0, arr.length - 1)];
+function pluck (arr: Array<any>, gen?: null | any): any {
+  return arr[randomInt(0, arr.length - 1, gen)];
 }
 
-function weightedPluck (arr: string[]): string {
+function weightedPluck (arr: string[], gen?: null | any): string {
   const scalars = {};
   const items = [].concat(arr);
   let scaleMax = 0;
@@ -43,7 +43,7 @@ function weightedPluck (arr: string[]): string {
   });
   let weightedSelection;
   let currentIndex = 0;
-  const atIndex = randomInt(0, scaleMax);
+  const atIndex = randomInt(0, scaleMax, gen);
   for (let i = 0; i < items.length; i++) {
     currentIndex += scale * (scalars[i] ? scalars[i] : 1);
     if (atIndex <= currentIndex) {
@@ -54,12 +54,12 @@ function weightedPluck (arr: string[]): string {
   return weightedSelection;
 }
 
-function randomInt (min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function randomInt (min: number, max: number, gen?: null | any): number {
+  return Math.floor((gen ? gen.random() : Math.random()) * (max - min + 1)) + min;
 }
 
-function randomIntRange (range: IntegerRange): number {
-  return randomInt(range.low, range.high);
+function randomIntRange (range: IntegerRange, gen?: null | any): number {
+  return randomInt(range.low, range.high, gen);
 }
 
 

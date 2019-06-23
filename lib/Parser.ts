@@ -1,4 +1,5 @@
-import { randomInt, pluck, weightedPluck } from './Random';
+import { pluck, weightedPluck, randomInt } from './Random';
+import * as randomSeed from 'random-seed';
 
 // Data container for any arbitrary kind of data
 interface ArbitraryData {
@@ -18,9 +19,14 @@ class Parser {
 
   public lists;
 
-  constructor (dictionary: object) {
+  public random;
+
+  constructor (dictionary: object, seeded?: boolean, seed?: string | number) {
     // Load language libraries
     this.lists = dictionary;
+    if (seeded) {
+      this.random = randomSeed(seed);
+    }
   }
 
   /**
@@ -45,7 +51,7 @@ class Parser {
         //   weighted = true;
         // }
       });
-      selection = weighted ? weightedPluck(results) : pluck(results);
+      selection = weighted ? weightedPluck(results, this.random) : pluck(results, this.random);
     });
     return selection;
   }
@@ -60,8 +66,8 @@ class Parser {
    * {A|B} - select A or B
    * [list.sublist] - select 1, unqiue, from sublist
    * {import:list} - specifies that one list belongs to another list
-   * {a} - uses a/an on the next word
-   * {A} - uses A/An on the next word
+   * (a) - uses a/an on the next word
+   * (A) - uses A/An on the next word
    * @param source 
    */
   parse (source: string): string {
@@ -72,6 +78,41 @@ class Parser {
     }
     if (adHocLists) {
       source = this.parseAdHocLists(adHocLists, source);
+    }
+    return this.finalPass(source);
+  }
+
+  finalPass (source: string): string {
+    const offset = 4;
+    // (a)
+    var a_1 = new RegExp(Tokens.A_LOWER);
+    if (source.match(a_1)) {
+      while (source.match(a_1)) {
+        let index = source.indexOf(Tokens.A_LOWER);
+        // Reached the end of the string
+        if (index + offset > source.length) {
+          break;
+        } else {
+          let letterToCheck = source[index + offset];
+          // @ts-ignore
+          source = source.replace(Tokens.A_LOWER, vowels.includes(letterToCheck.toLowerCase()) ? 'an' : 'a');
+        }
+      }
+    }
+    // (A)
+    var a_2 = new RegExp(Tokens.A_UPPER);
+    if (source.match(a_2)) {
+      while (source.match(a_2)) {
+        let index = source.indexOf(Tokens.A_UPPER);
+        // Reached the end of the string
+        if (index + offset > source.length) {
+          break;
+        } else {
+          let letterToCheck = source[index + offset];
+          // @ts-ignore
+          source = source.replace(Tokens.A_UPPER, vowels.includes(letterToCheck.toLowerCase()) ? 'An' : 'A');
+        }
+      }
     }
     return source;
   }
@@ -132,10 +173,10 @@ class Parser {
       if (uniqueOptions) {
           let intermediarySelection;
           if (weighted) {
-              intermediarySelection = weightedPluck(results);
+              intermediarySelection = weightedPluck(results, this.random);
           }
           else {
-              intermediarySelection = pluck(results);
+              intermediarySelection = pluck(results, this.random);
           }
           // The selected item was part of a unique list selection
           if (uniqueOptionReferenceIndex[intermediarySelection]) {
@@ -155,7 +196,7 @@ class Parser {
           // Replace the list group for each section
       }
       else {
-          source = source.replace(listGroup, weighted ? weightedPluck(results) : pluck(results));
+          source = source.replace(listGroup, weighted ? weightedPluck(results, this.random) : pluck(results, this.random));
       }
     });
     return source;
@@ -170,7 +211,7 @@ class Parser {
       return arr;
     }
     for (let i = 0; i < quantity; i++) {
-        const value = pluck(mut);
+        const value = pluck(mut, this.random);
         values.push(value);
         const index = mut.indexOf(value);
         mut.splice(index, 1);
@@ -180,17 +221,19 @@ class Parser {
 
   parseAdHocLists (adHocLists: string[], source: string): string {
     adHocLists.forEach((listGroup) => {
-      const choices = listGroup.replace(/\{/g, '').replace(/\}/g, '').split('|');
-      let results = [];
-      let weighted = false;
-      choices.forEach((choice) => {
-        const [result] = choice.match(/([a-zA-Z\s\^\.0-9])+/);
-        results.push(result);
-        if (result.indexOf('^') !== -1) {
-          weighted = true;
-        }
-      });
-      source = source.replace(listGroup, weighted ? weightedPluck(results) : pluck(results));
+      if (listGroup !== Tokens.A_LOWER && listGroup !== Tokens.A_UPPER) {
+        const choices = listGroup.replace(/\{/g, '').replace(/\}/g, '').split('|');
+        let results = [];
+        let weighted = false;
+        choices.forEach((choice) => {
+          const [result] = choice.match(/([a-zA-Z\s\^\.0-9])+/);
+          results.push(result);
+          if (result.indexOf('^') !== -1) {
+            weighted = true;
+          }
+        });
+        source = source.replace(listGroup, weighted ? weightedPluck(results, this.random) : pluck(results, this.random));
+      }
     });
     return source;
   }
@@ -227,7 +270,7 @@ class Parser {
       return selections;
     }
     else {
-      return pluck(selections);
+      return pluck(selections, this.random);
     }
   }
 
@@ -268,7 +311,7 @@ class Parser {
       return selections;
     }
     else {
-      return pluck(selections);
+      return pluck(selections, this.random);
     }
   }
 
@@ -279,6 +322,15 @@ class Parser {
     } else {
       return this.recursiveslyParse(parsed);
     }
+  }
+
+  /**
+   * Returns the next seeded randomInt
+   * @param min
+   * @param max 
+   */
+  randomIntSeeded (min: number, max: number) {
+    return randomInt(min, max, this.random);
   }
 
 }

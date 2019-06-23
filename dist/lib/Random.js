@@ -10,11 +10,11 @@ class IntegerRange {
     }
 }
 exports.IntegerRange = IntegerRange;
-function pluck(arr) {
-    return arr[randomInt(0, arr.length - 1)];
+function pluck(arr, gen) {
+    return arr[randomInt(0, arr.length - 1, gen)];
 }
 exports.pluck = pluck;
-function weightedPluck(arr) {
+function weightedPluck(arr, gen) {
     const scalars = {};
     const items = [].concat(arr);
     let scaleMax = 0;
@@ -40,7 +40,7 @@ function weightedPluck(arr) {
     });
     let weightedSelection;
     let currentIndex = 0;
-    const atIndex = randomInt(0, scaleMax);
+    const atIndex = randomInt(0, scaleMax, gen);
     for (let i = 0; i < items.length; i++) {
         currentIndex += scale * (scalars[i] ? scalars[i] : 1);
         if (atIndex <= currentIndex) {
@@ -51,12 +51,12 @@ function weightedPluck(arr) {
     return weightedSelection;
 }
 exports.weightedPluck = weightedPluck;
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+function randomInt(min, max, gen) {
+    return Math.floor((gen ? gen.random() : Math.random()) * (max - min + 1)) + min;
 }
 exports.randomInt = randomInt;
-function randomIntRange(range) {
-    return randomInt(range.low, range.high);
+function randomIntRange(range, gen) {
+    return randomInt(range.low, range.high, gen);
 }
 exports.randomIntRange = randomIntRange;
 function clamp(value, low, high) {

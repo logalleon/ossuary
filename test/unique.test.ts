@@ -1,4 +1,4 @@
-import { Ossuary } from '../lib/Ossuary';
+import Parser from '../lib/Parser';
 import { LegendaryData as data } from './test.data';
 /**
  * [list] - selects from list, same as ...
@@ -14,7 +14,7 @@ import { LegendaryData as data } from './test.data';
  * {A} - uses A/An on the next word
  * @param source 
  */
-const ossuary = new Ossuary(data);
+const ossuary = new Parser(data);
 
 const o = (str: string): void => {
   console.log(ossuary.parse(str));

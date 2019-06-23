@@ -4,7 +4,8 @@ interface ArbitraryData {
 }
 declare class Parser {
     lists: any;
-    constructor(dictionary: object);
+    random: any;
+    constructor(dictionary: object, seeded?: boolean, seed?: string | number);
     /**
      * Does things similar to parse, but retrieves the arbitrary data object
      */
@@ -19,11 +20,12 @@ declare class Parser {
      * {A|B} - select A or B
      * [list.sublist] - select 1, unqiue, from sublist
      * {import:list} - specifies that one list belongs to another list
-     * {a} - uses a/an on the next word
-     * {A} - uses A/An on the next word
+     * (a) - uses a/an on the next word
+     * (A) - uses A/An on the next word
      * @param source
      */
     parse(source: string): string;
+    finalPass(source: string): string;
     parseLists(lists: string[], source: string): string;
     reducePluck(arr: string[], quantity: number): string[];
     parseAdHocLists(adHocLists: string[], source: string): string;
@@ -38,6 +40,12 @@ declare class Parser {
      */
     deepDiveRetrieve(accessor: string, returnEntireArray?: boolean): ArbitraryData | ArbitraryData[];
     recursiveslyParse: (str: string) => string;
+    /**
+     * Returns the next seeded randomInt
+     * @param min
+     * @param max
+     */
+    randomIntSeeded(min: number, max: number): number;
 }
 export default Parser;
 export { ArbitraryData };
