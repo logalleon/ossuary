@@ -22,8 +22,9 @@ const o = (str: string): void => {
 
 // Good
 const good = [
-  '[animals.insects:unique(2)] is an animal',
-  `[animals.reptiles:unique(3)] is an animal`
+  `[animals.insects:unique(2):join('%%')]`,
+  `[animals.reptiles:unique(3):join('DELIMITER')]`,
+  '[animals.mammals]'
 ];
 console.log('\tGood\t\t~~~~~~~~~~~~~~~\n');
 good.map(o);
