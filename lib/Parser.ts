@@ -10,7 +10,9 @@ interface ArbitraryData {
 enum Tokens {
   A_LOWER = '{a}',
   A_UPPER = '{A}',
-  SPACE = ' '
+  SPACE = ' ',
+  UNIQUE = 'unique',
+  JOIN = 'join'
 }
 
 const vowels: string[] = ['a', 'e', 'i', 'o', 'u', 'y'];
@@ -126,8 +128,9 @@ class Parser {
       const listReferences: string[] = listGroup.split('|');
       let results = [];
       let weighted = false;
+      let joinDelimiter;
       listReferences.forEach((listReference, referenceIndex) => {
-          let [accessor] = listReference.match(/[a-zA-ZÀ-ÿ-\s]+/);
+          let [accessor] = listReference.match(/[a-zA-ZÀ-ÿ\.]+/);
           let scalar;
           // Parse out the scalar for frequency
           if (listReference.indexOf('^') !== -1) {
@@ -135,9 +138,14 @@ class Parser {
           }
           // Parse out unique
           let quantity;
-          if (listReference.indexOf(':') !== -1) {
-              quantity = listReference.split(':')[1].match(/[0-9]+/).join('');
+          if (listReference.indexOf(`:${Tokens.UNIQUE}`) !== -1) {
+              quantity = listReference.split(`:${Tokens.UNIQUE}`)[1].match(/[0-9]+/).join(''); // pretty sure this will fuck with join with numeric delimeters
               uniqueOptions = true;
+          }
+          // Parse joins
+          joinDelimiter;
+          if (listReference.indexOf(`:${Tokens.JOIN}`) !== -1) {
+            joinDelimiter = listReference.split(`:${Tokens.JOIN}`)[1].match(/\'(.*?)\'/)[0].replace(/\'/g, '');
           }
           // Unique selections have to select from a list
           let result;
@@ -184,10 +192,10 @@ class Parser {
               const uniqueSelection = uniqueOptionReferenceIndex[intermediarySelection];
               const { result, quantity } = uniqueSelection;
               if (quantity > result.length) {
-                  source = source.replace(listGroup, result.join(Tokens.SPACE));
+                  source = source.replace(listGroup, result.join(joinDelimiter || Tokens.SPACE));
               }
               else {
-                  source = source.replace(listGroup, this.reducePluck(result, quantity).join(Tokens.SPACE));
+                  source = source.replace(listGroup, this.reducePluck(result, quantity).join(joinDelimiter || Tokens.SPACE));
               }
           }
           else {
