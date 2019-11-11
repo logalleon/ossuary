@@ -59,6 +59,20 @@ function randomIntRange(range, gen) {
     return randomInt(range.low, range.high, gen);
 }
 exports.randomIntRange = randomIntRange;
+function uniquePluck(arr, count) {
+    let values = [];
+    let reduced = [];
+    if (count >= arr.length || count < 0)
+        return [arr, []];
+    reduced = [].concat(arr);
+    while (count--) {
+        const index = randomInt(0, reduced.length - 1);
+        values.push(reduced[index]);
+        reduced = [].concat(reduced.slice(0, index), reduced.slice(index + 1));
+    }
+    return [values, reduced];
+}
+exports.uniquePluck = uniquePluck;
 function clamp(value, low, high) {
     if (value < low) {
         return low;

@@ -62,6 +62,19 @@ function randomIntRange (range: IntegerRange, gen?: null | any): number {
   return randomInt(range.low, range.high, gen);
 }
 
+function uniquePluck (arr: any[], count: number): any[][] {
+  let values = [];
+  let reduced = [];
+  if (count >= arr.length || count < 0) return [arr, []];
+  reduced = [].concat(arr);
+  while (count--) {
+    const index = randomInt(0, reduced.length -1);
+    values.push(reduced[index]);
+    reduced = [].concat(reduced.slice(0, index), reduced.slice(index + 1));
+  }
+  return [values, reduced];
+}
+
 
 
 function clamp (value: number, low: number, high: number): number {
@@ -74,4 +87,4 @@ function clamp (value: number, low: number, high: number): number {
   return value;
 }
 
-export { randomInt, pluck, clamp, weightedPluck, randomIntRange, IntegerRange };
+export { randomInt, pluck, clamp, weightedPluck, randomIntRange, IntegerRange, uniquePluck };
