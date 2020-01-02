@@ -46,7 +46,8 @@ function weightedPluck (arr: string[], gen?: null | any): string {
   const atIndex = randomInt(0, scaleMax, gen);
   for (let i = 0; i < items.length; i++) {
     currentIndex += scale * (scalars[i] ? scalars[i] : 1);
-    if (atIndex <= currentIndex) {
+    // This is probably an item to look at since <= occasionally throws and error
+    if (atIndex < currentIndex) {
       weightedSelection = items[i];
       break;
     }
