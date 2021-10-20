@@ -31,7 +31,8 @@ const good = [
   '{This is a |test 4 2 5| of}',
   '{höòw áb-out açentß?|trûë--}',
   '[reptiles] are really cool.',
-  '[mammals.insects:unique(2)] is an animal'
+  '[mammals.insects:unique(2)] is an animal',
+  `{I'm full of punctation!?|Caltrops!;;;;}`
 ];
 console.log('\tGood\t\t~~~~~~~~~~~~~~~\n');
 good.map(o);

@@ -224,16 +224,13 @@ class Parser {
         adHocLists.forEach((listGroup) => {
             if (listGroup !== Tokens.A_LOWER && listGroup !== Tokens.A_UPPER) {
                 const choices = listGroup.replace(/\{/g, '').replace(/\}/g, '').split('|');
-                let results = [];
                 let weighted = false;
                 choices.forEach((choice) => {
-                    const [result] = choice.match(/([a-zA-Z\s\^\.0-9])+/);
-                    results.push(result);
-                    if (result.indexOf('^') !== -1) {
+                    if (choice.indexOf('^') !== -1) {
                         weighted = true;
                     }
                 });
-                source = source.replace(listGroup, weighted ? Random_1.weightedPluck(results, this.random) : Random_1.pluck(results, this.random));
+                source = source.replace(listGroup, weighted ? Random_1.weightedPluck(choices, this.random) : Random_1.pluck(choices, this.random));
             }
         });
         return source;
